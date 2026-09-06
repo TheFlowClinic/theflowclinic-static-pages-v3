@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Flow Clinic — Reclaim your mind</title>
+<style>
+html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#F9FBFA;color:#1A2E3B}
+#loading{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center}
+</style>
+</head>
+<body>
+<div id="loading">Loading The Flow Clinic…</div>
+<script>
+(async function(){
+  try {
+    if (typeof DecompressionStream === 'undefined') throw new Error('This browser does not support gzip decompression.');
+    const urls=['site-data-0.txt','site-data-1.txt','site-data-2.txt','site-data-3.txt'];
+    const parts=await Promise.all(urls.map(async function(url){
+      const response=await fetch(url,{cache:'no-store'});
+      if(!response.ok) throw new Error('Could not load '+url);
+      return response.text();
+    }));
+    const base64=parts.join('');
+    const binary=atob(base64);
+    const bytes=new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+    const decompressed=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    const html=await new Response(decompressed).text();
+    document.open();
+    document.write(html);
+    document.close();
+  } catch (error) {
+    console.error(error);
+    document.getElementById('loading').textContent='Unable to load this page in the current browser.';
+  }
+})();
+</script>
+</body>
+</html>
