@@ -4,36 +4,759 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Flow Clinic — Reclaim your mind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
 <style>
-html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#F9FBFA;color:#1A2E3B}
-#loading{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center}
+:root{
+  --teal:#008080;--teal-deep:#00696B;--trust:#274C77;--aqua:#02C4DE;
+  --muted-teal:#0097A7;--powder:#B2E4E6;--cyan:#DFF6F9;
+  --white:#F9FBFA;--gunmetal:#1A2E3B;--earth:#EDE6DD;
+  --g50:#F4F6F7;--g100:#E4E9EB;--g300:#B0BEC5;--g600:#546E7A;--g800:#37474F;
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s6:24px;--s8:32px;--s12:48px;--s16:64px;--s20:80px;--s24:96px;
+  --pill:28px;--card:12px;--wrap:1120px;--read:64ch;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Lato,-apple-system,Segoe UI,sans-serif;font-size:17px;line-height:1.65;color:var(--gunmetal);background:var(--white);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-weight:700;line-height:1.15;letter-spacing:-.015em;color:var(--trust)}
+h1{font-size:clamp(36px,5vw,58px);letter-spacing:-.03em}
+h2{font-size:clamp(27px,3vw,36px)}
+h3{font-size:21px}h4{font-size:17px;color:var(--gunmetal)}
+p{max-width:var(--read)}a{color:var(--teal)}
+.browser{max-width:1280px;margin:var(--s8) auto;border:1px solid var(--g100);border-radius:var(--card);overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(26,46,59,.06)}
+.bar{display:flex;align-items:center;gap:var(--s2);padding:var(--s3) var(--s4);background:var(--g50);border-bottom:1px solid var(--g100)}
+.dot{width:11px;height:11px;border-radius:50%;background:var(--g300)}
+.url{margin-left:var(--s4);font-size:13px;color:var(--g600);background:#fff;border:1px solid var(--g100);border-radius:var(--pill);padding:3px 14px}
+header{position:sticky;top:0;z-index:20;background:rgba(249,251,250,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--g100)}
+.nav{max-width:var(--wrap);margin:0 auto;display:flex;align-items:center;gap:var(--s4);padding:var(--s4) var(--s6);flex-wrap:wrap}
+.brand{font-size:19px;font-weight:900;color:var(--trust);letter-spacing:-.03em;white-space:nowrap;line-height:1.1}
+.brand em{display:block;font-style:normal;font-size:11px;font-weight:400;color:var(--teal);letter-spacing:.06em}
+.tabs{display:flex;gap:2px;flex:1;flex-wrap:wrap}
+.tab{font:inherit;font-size:15px;background:none;border:0;cursor:pointer;color:var(--g600);padding:var(--s2) var(--s3);border-radius:var(--pill);white-space:nowrap}
+.tab:hover{color:var(--trust);background:var(--g50)}
+.tab[aria-selected="true"]{color:var(--teal);background:var(--cyan);font-weight:700}
+.tab:focus-visible,a:focus-visible,summary:focus-visible,.btn:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+.btn{display:inline-block;background:var(--teal);color:#fff;text-decoration:none;font-weight:700;font-size:16px;padding:13px 30px;border-radius:var(--pill);border:0;cursor:pointer}
+.btn:hover{background:var(--teal-deep)}
+.btn-sm{padding:9px 20px;font-size:15px}
+.btn-light{background:#fff;color:var(--trust)}
+.textlink{display:inline-block;color:var(--trust);font-size:16px;margin-top:var(--s4)}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--s6)}
+section.band{padding:var(--s20) 0}
+section.band+section.band{border-top:1px solid var(--g100)}
+.band.cyan{background:var(--cyan);border-top:0}
+.band.earth{background:var(--earth);border-top:0}
+.band.deep{background:var(--trust);color:#fff;border-top:0}
+.band.deep h2,.band.deep h3,.band.deep h4{color:#fff}
+.band.deep p{color:#DCE5EF}
+.lede{font-size:20px;color:var(--g800);max-width:58ch}
+.eyebrow{color:var(--teal);font-weight:700;font-size:15px;margin-bottom:var(--s3)}
+.page{display:none}.page.active{display:block}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--s8)}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:var(--s6)}
+.stack>*+*{margin-top:var(--s4)}
+.mt2{margin-top:var(--s2)}.mt6{margin-top:var(--s6)}.mt8{margin-top:var(--s8)}.mt12{margin-top:var(--s12)}
+.hero{padding:var(--s24) 0 var(--s20);background:linear-gradient(180deg,var(--cyan) 0%,var(--white) 100%)}
+.hero h1{max-width:17ch}
+.tagline{font-size:14px;font-weight:700;color:var(--teal);letter-spacing:.14em;margin-bottom:var(--s4)}
+.rule{width:56px;height:4px;background:var(--teal);border-radius:2px;margin-bottom:var(--s6)}
+.card{background:#fff;border:1px solid var(--g100);border-radius:var(--card);padding:var(--s6)}
+.tint{background:var(--cyan);border-radius:var(--card);padding:var(--s8)}
+.boundary{background:var(--earth);border-radius:var(--card);padding:var(--s6);max-width:72ch}
+.boundary p{max-width:none;font-size:16px}
+.dashes{max-width:var(--read);list-style:none}
+.dashes li{padding:var(--s3) 0;border-bottom:1px solid var(--g100);font-size:18px}
+.dashes li:first-child{border-top:1px solid var(--g100)}
+.parallel{display:grid;grid-template-columns:1fr 1fr;gap:var(--s6);align-items:stretch}
+@media(max-width:820px){.parallel{grid-template-columns:1fr}}
+.panel{background:#fff;border:1px solid var(--g100);border-radius:var(--card);padding:var(--s8);display:flex;flex-direction:column}
+.panel.alt{background:var(--cyan);border-color:var(--powder)}
+.panel h3{padding-bottom:var(--s4);border-bottom:3px solid var(--teal);margin-bottom:var(--s6)}
+.panel.alt h3{border-bottom-color:var(--trust)}
+.panel ul{list-style:none;flex:1}
+.panel li{padding:var(--s3) 0 var(--s3) var(--s6);position:relative;border-bottom:1px solid rgba(26,46,59,.09);font-size:16px}
+.panel li:last-child{border-bottom:0}
+.panel li::before{content:"";position:absolute;left:0;top:16px;width:9px;height:9px;border-radius:50%;background:var(--teal)}
+.panel.alt li::before{background:var(--trust)}
+.panel .note{font-size:16px;color:var(--g800);margin-bottom:var(--s6);max-width:none}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:var(--s6)}
+.step{counter-increment:s}
+.step::before{content:counter(s);display:block;font-size:15px;font-weight:700;color:var(--teal);border-top:3px solid var(--teal);padding-top:var(--s3);margin-bottom:var(--s3)}
+.step h4{margin-bottom:var(--s2)}
+.step p{font-size:16px;color:var(--g800);max-width:none}
+.outgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--s6)}
+.out{background:#fff;border:1px solid var(--g100);border-radius:var(--card);overflow:hidden;display:flex;flex-direction:column}
+.out .pic{background:var(--cyan);display:block;width:100%;height:auto}
+.out .body{padding:var(--s6)}
+.out .num{font-size:13px;font-weight:700;color:var(--muted-teal);letter-spacing:.08em;margin-bottom:var(--s2)}
+.out h4{font-size:20px;color:var(--trust);margin-bottom:var(--s3)}
+.out p{font-size:16px;color:var(--g800);max-width:none}
+.finding{max-width:72ch;padding:var(--s4) 0;border-bottom:1px solid var(--g100)}
+.finding p{max-width:none}
+.dated{max-width:74ch;padding:var(--s6) 0;border-top:2px solid var(--powder)}
+.dated .when{font-weight:700;color:var(--teal);font-size:16px;margin-bottom:var(--s2)}
+.dated p{max-width:none;font-size:16px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin-top:var(--s6)}
+th,td{text-align:left;padding:var(--s3) var(--s4);border-bottom:1px solid var(--g100);vertical-align:top}
+thead th{background:var(--trust);color:#fff;font-size:14px}
+thead th:last-child{background:var(--teal)}
+tbody td:last-child{background:var(--cyan);font-weight:700}
+details{border-bottom:1px solid var(--g100);max-width:78ch}
+summary{cursor:pointer;padding:var(--s4) 0;font-weight:700;font-size:17px;list-style:none;display:flex;justify-content:space-between;gap:var(--s4)}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--teal);font-weight:700;flex:none}
+details[open] summary::after{content:"–"}
+details p{padding-bottom:var(--s4);font-size:16px;color:var(--g800)}
+.clin{display:flex;gap:var(--s6);flex-wrap:wrap;align-items:flex-start}
+.avatar{width:96px;height:96px;border-radius:50%;background:var(--powder);flex:none;display:flex;align-items:center;justify-content:center;color:var(--trust);font-weight:700;font-size:26px}
+.tbc{background:var(--earth);border:1px dashed var(--g600);border-radius:4px;padding:1px 7px;font-size:15px;color:var(--g800)}
+.route{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:var(--s4)}
+.route a{display:block;background:#fff;border:1px solid var(--g100);border-radius:var(--card);padding:var(--s4) var(--s6);text-decoration:none}
+.route a:hover{border-color:var(--teal)}
+.route strong{display:block;color:var(--trust);font-size:18px;margin-bottom:var(--s1)}
+.route span{color:var(--g800);font-size:15px}
+.crisis{background:var(--trust);color:#fff;padding:var(--s4) 0;font-size:16px}
+footer{background:var(--gunmetal);color:#CFD8DC;padding:var(--s12) 0;font-size:15px}
+footer a{color:var(--powder);display:block;text-decoration:none;padding:3px 0}
+.foot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:var(--s8);margin-top:var(--s6)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media(max-width:640px){section.band{padding:var(--s12) 0}.hero{padding:var(--s12) 0}}
 </style>
 </head>
 <body>
-<div id="loading">Loading The Flow Clinic…</div>
+<div class="browser">
+<div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">theflowclinic.org</span></div>
+
+<header><div class="nav">
+  <div class="brand">The Flow Clinic<em>Reclaim your mind</em></div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-p="home">Home</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="org">For organisations</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="schools">Schools</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="about">About us</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="why">Why us</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="someone">For parent, partner and friend</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="faq">FAQ</button>
+  </div>
+  <a class="btn btn-sm" href="#">Start your profile</a>
+</div></header>
+
+<main>
+
+<!-- ============== HOME — contains only the sections under "Home Page" in the doc ============== -->
+<div class="page active" id="p-home">
+
+  <!-- 1. Hero Section -->
+  <div class="hero"><div class="wrap">
+    <div class="tagline">RECLAIM YOUR MIND</div>
+    <h1>Reclaim your mind</h1>
+    <p class="lede mt6">Evidence-based online therapy, designed around <strong>you</strong>. Get matched with an RCI-licensed Clinical Psychologist from your very first session.</p>
+  </div></div>
+
+  <section class="band cyan"><div class="wrap">
+    <h2>Your preference profile</h2>
+    <p class="lede mt6">Research consistently finds that the bond between therapist and client is one of the biggest factors in whether therapy succeeds. <strong>Your preference profile</strong> tells us what that connection should look like for you, so we can find the <em>right fit</em>.</p>
+    <p class="mt8">A validated measure of what clients want from therapy. Takes about ten minutes.</p>
+    <div class="mt6"><a class="btn" href="#">Start your profile</a></div>
+  </div></section>
+
+  <!-- 2. Who we are -->
+  <section class="band"><div class="wrap">
+    <p class="eyebrow">Who we are</p>
+    <h2>Licensed clinical psychologists. Matched properly the first time.</h2>
+    <div class="stack mt8" style="max-width:var(--read)">
+      <p>The Flow Clinic is a clinical-psychologist-led therapy service. Every clinician on our panel is registered with the Rehabilitation Council of India (RCI), and every client is <em>matched</em> to one of them <em>on their stated preferences</em> rather than on whoever happens to have a slot free.</p>
+      <p>Matching based on preference is the whole idea. Across hundreds of studies, the single strongest predictor of whether therapy helps is not the therapist's choice of school of therapy, it is the working relationship between the client and the therapist. Most services leave that to chance. We treat it as the thing to get right before anything else happens.</p>
+      <p><em>We are not a wellness app with a chat window.</em> There is assessment, a formulation of what is actually keeping the problem going, a treatment plan you can see, and a qualified clinician accountable for it.</p>
+    </div>
+    <a class="textlink" href="#">Read how we hire our clinicians</a>
+  </div></section>
+
+  <!-- 3. Where to begin -->
+  <section class="band earth"><div class="wrap">
+    <h2>Where to begin</h2>
+    <p class="lede mt6">Some people arrive at therapy knowing exactly what they want to work on. Others arrive knowing only that something needs to change. Both are fine starting points.</p>
+    <p class="mt8" style="font-size:20px;max-width:64ch">“Whether you have a clear roadmap for your mental health or just a sense that things need to shift, you are exactly where you need to be.”</p>
+
+    <div class="parallel mt12">
+      <div class="panel">
+        <h3>If you already know why you're here</h3>
+        <p class="note">You may recognise yourself in one of these:</p>
+        <ul>
+          <li>I want to manage anxiety or panic that is taking over my day</li>
+          <li>I want to work through a trauma, a painful past, or a recent loss</li>
+          <li>I want to repair how things are with my partner, my family, or my child</li>
+          <li>I want to understand myself better, feel more sure of myself, and stop second-guessing who I am</li>
+          <li>I want support through a big change: a career shift, a divorce, becoming a parent, retiring</li>
+        </ul>
+      </div>
+      <div class="panel alt">
+        <h3>If you're not sure why you're here</h3>
+        <p class="note">That is a completely normal place to start from. Most people arrive with a feeling rather than a problem statement. You do not need a diagnosis, a referral, or the right words to begin. You may recognise yourself here instead:</p>
+        <ul>
+          <li>Someone who cares about me told me I should talk to someone</li>
+          <li>My doctor suggested it</li>
+          <li>My moods or my relationships keep going the same way and I can't work out why</li>
+          <li>Something feels off and I can't name it</li>
+          <li>I feel disconnected from myself, or from the things that used to matter to me</li>
+          <li>I'm not sleeping well, I'm tired all the time, my body feels tense, and nothing medical explains it</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="mt8" style="font-size:20px"><strong>Every one of these is a real reason to start.</strong></p>
+
+    <div class="tint mt12" style="max-width:76ch">
+      <h3>Not sure how to put it into words?</h3>
+      <p class="mt6" style="max-width:none">A short set of guided questions that helps you name what has been going on. No scores, no labels, no diagnosis. Just a clearer sense of what you might want to bring into a first session.</p>
+      <p class="mt6" style="max-width:none">It takes a few minutes. Nothing you write is shared with anyone unless you choose to share it.</p>
+      <div class="mt6"><a class="btn" href="#">Start the guided questions</a></div>
+    </div>
+
+    <div class="mt12" style="max-width:72ch">
+      <h3>You've handled a lot on your own</h3>
+      <p class="mt6" style="max-width:none">Reaching out is not giving up control. It is using a better tool. Therapy is a structured, skill-based process, not a last resort. The strongest people we work with came in precisely because they take themselves seriously. If sleep, focus, temper or stress are getting in the way of how you work and live, that is reason enough. No breakdown required.</p>
+    </div>
+  </div></section>
+
+  <!-- 4. How it works -->
+  <section class="band"><div class="wrap">
+    <h2>How it works</h2>
+    <div class="steps mt12">
+      <div class="step"><h4>Tell us what you're looking for</h4><p>Answer a short set of questions about how you like to be worked with: how directive you want your therapist to be, how much structure suits you, what you want the sessions to feel like. Takes about 10 minutes. Couples fill this in separately, because you may want different things from the same therapist, and that matters.</p></div>
+      <div class="step"><h4>We match you</h4><p>We use your answers to find the therapist whose way of working fits how you actually want to be helped. Not the next available name on a list.</p></div>
+      <div class="step"><h4>Meet them before you commit</h4><p>A free 15 minute audio call with your matched therapist. No agenda, no charge, no pressure to continue. It is there so you can find out whether this feels like someone you can talk to. If you already feel ready, you can skip it and book a full session instead.</p></div>
+      <div class="step"><h4>Therapy begins</h4><p>You book your first session and start the work, on your own or together with your partner.</p></div>
+    </div>
+  </div></section>
+
+  <!-- 5. What therapy actually changes -->
+  <section class="band cyan"><div class="wrap">
+    <h2>What therapy actually changes</h2>
+    <p class="lede mt6">This is what finding the right therapist feels like.</p>
+    <p class="mt6">When researchers stopped using symptom questionnaires and simply asked people what changed, seven things came up again and again. Symptom relief was only one of them. These are the others, in the words clients used.</p>
+
+    <div class="outgrid mt12">
+
+      <div class="out">
+        <svg class="pic" viewBox="0 0 320 200" role="img" aria-label="A weight lifting clear of the ground"><rect width="320" height="200" fill="#DFF6F9"/><path d="M40 160h240" stroke="#B2E4E6" stroke-width="10" stroke-linecap="round"/><circle cx="160" cy="88" r="44" fill="#008080"/><path d="M160 150v-18M132 144l10-14M188 144l-10-14" stroke="#B2E4E6" stroke-width="8" stroke-linecap="round"/><circle cx="248" cy="52" r="13" fill="#02C4DE"/><circle cx="72" cy="44" r="9" fill="#B2E4E6"/><circle cx="264" cy="112" r="7" fill="#B2E4E6"/></svg>
+        <div class="body"><div class="num">01</div><h4>You feel lighter</h4>
+        <p>The anxiety, the low mood, the weight you walked in with — it lifts. This is the one everyone expects. It is the floor, not the ceiling.</p></div>
+      </div>
+
+      <div class="out">
+        <svg class="pic" viewBox="0 0 320 200" role="img" aria-label="A steady upright form standing while waves move past"><rect width="320" height="200" fill="#DFF6F9"/><path d="M10 132q25-34 50 0t50 0 50 0 50 0 50 0 50 0" stroke="#02C4DE" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M10 164q25-34 50 0t50 0 50 0 50 0 50 0 50 0" stroke="#B2E4E6" stroke-width="8" fill="none" stroke-linecap="round"/><rect x="150" y="52" width="20" height="110" rx="10" fill="#008080"/><circle cx="160" cy="48" r="20" fill="#274C77"/></svg>
+        <div class="body"><div class="num">02</div><h4>Life stops running you</h4>
+        <p>You leave with tools that hold up on the hard days. The same stresses still happen. They just stop taking over the week.</p></div>
+      </div>
+
+      <div class="out">
+        <svg class="pic" viewBox="0 0 320 200" role="img" aria-label="A tangled line resolving into a clear path"><rect width="320" height="200" fill="#DFF6F9"/><path d="M28 156c34 0 22-42 52-42s26 46 56 46 30-62 60-62 22 30 50 30" stroke="#B2E4E6" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M28 92c30-30 54 14 84-14s40-38 68-24" stroke="#008080" stroke-width="10" fill="none" stroke-linecap="round"/><circle cx="222" cy="60" r="22" fill="#274C77"/><circle cx="222" cy="60" r="9" fill="#DFF6F9"/></svg>
+        <div class="body"><div class="num">03</div><h4>You understand why you do what you do</h4>
+        <p>A clearer view of your own patterns, reactions and reasons. This is the part people say stays with them longest.</p></div>
+      </div>
+
+      <div class="out">
+        <svg class="pic" viewBox="0 0 320 200" role="img" aria-label="Hands resting on a steering wheel"><rect width="320" height="200" fill="#DFF6F9"/><circle cx="160" cy="104" r="64" fill="none" stroke="#008080" stroke-width="16"/><circle cx="160" cy="104" r="20" fill="#274C77"/><path d="M160 84V44M144 116l-40 28M176 116l40 28" stroke="#008080" stroke-width="13" stroke-linecap="round"/><circle cx="102" cy="94" r="15" fill="#02C4DE"/><circle cx="218" cy="94" r="15" fill="#02C4DE"/></svg>
+        <div class="body"><div class="num">04</div><h4>You feel back in the driver's seat</h4>
+        <p>From stuck to steering. The sense that you can act on your own life again, rather than waiting for it to ease up.</p></div>
+      </div>
+
+      <div class="out">
+        <svg class="pic" viewBox="0 0 320 200" role="img" aria-label="Two forms overlapping and connected"><rect width="320" height="200" fill="#DFF6F9"/><circle cx="128" cy="112" r="52" fill="#008080" opacity=".88"/><circle cx="192" cy="112" r="52" fill="#274C77" opacity=".88"/><circle cx="160" cy="112" r="20" fill="#DFF6F9"/><circle cx="128" cy="48" r="14" fill="#B2E4E6"/><circle cx="192" cy="48" r="14" fill="#B2E4E6"/></svg>
+        <div class="body"><div class="num">05</div><h4>Things get better with the people who matter</h4>
+        <p>Change shows up where you feel it most — calmer conversations at home, less friction, more actual connection.</p></div>
+      </div>
+
+      <div class="out">
+        <svg class="pic" viewBox="0 0 320 200" role="img" aria-label="A sun rising over steady ground"><rect width="320" height="200" fill="#DFF6F9"/><circle cx="160" cy="88" r="38" fill="#008080"/><path d="M160 32V12M96 88H72M248 88h-24M114 42l-14-14M206 42l14-14" stroke="#02C4DE" stroke-width="9" stroke-linecap="round"/><rect x="48" y="160" width="224" height="14" rx="7" fill="#274C77"/><rect x="82" y="132" width="30" height="28" rx="6" fill="#B2E4E6"/><rect x="145" y="132" width="30" height="28" rx="6" fill="#B2E4E6"/><rect x="208" y="132" width="30" height="28" rx="6" fill="#B2E4E6"/></svg>
+        <div class="body"><div class="num">06</div><h4>You show up for your day</h4>
+        <p>Better focus at work, more presence in your life. Often this improves before the feelings do, and that counts.</p></div>
+      </div>
+
+      <div class="out">
+        <svg class="pic" viewBox="0 0 320 200" role="img" aria-label="A wave held steadily inside a vessel"><rect width="320" height="200" fill="#DFF6F9"/><path d="M76 66v54a84 66 0 0 0 168 0V66" fill="none" stroke="#274C77" stroke-width="14" stroke-linecap="round"/><path d="M84 104q21-26 42 0t42 0 42 0 42 0" stroke="#008080" stroke-width="11" fill="none" stroke-linecap="round"/><path d="M84 136q21-26 42 0t42 0 42 0 42 0" stroke="#B2E4E6" stroke-width="11" fill="none" stroke-linecap="round"/><circle cx="160" cy="34" r="14" fill="#02C4DE"/></svg>
+        <div class="body"><div class="num">07</div><h4>You get steadier with emotion</h4>
+        <p>You learn to sit with what you feel instead of being thrown by it, so feelings inform you rather than flood you.</p></div>
+      </div>
+
+    </div>
+
+    <div class="boundary mt12">
+      <p><strong>An honest note.</strong> Therapy is not about becoming a different person or never having a hard day again. It is about those days interfering less, and you living more.</p>
+    </div>
+  </div></section>
+
+  <!-- 11. Closing CTA — no copy exists in the doc -->
+  <section class="band deep"><div class="wrap">
+    <h2>Closing CTA</h2>
+    <p class="mt6"><span class="tbc">Section 11 of the doc is a heading with no copy under it. Nothing has been written here.</span></p>
+  </div></section>
+</div>
+
+<!-- ============== FOR ORGANISATIONS ============== -->
+<div class="page" id="p-org">
+  <div class="hero"><div class="wrap">
+    <div class="rule"></div>
+    <h1>Your institution is now legally required to have a mental health system. Most have a counsellor and a phone number.</h1>
+    <p class="lede mt6">We build the rest: the policy, the escalation protocol, the trained staff, the supervised clinician, and the annual report your regulator asks for.</p>
+    <div class="mt8"><a class="btn" href="#">Book a 45-minute discovery call</a>
+    <div><a class="textlink" href="#">Or download the compliance brief: everything the Supreme Court and CBSE now require of you, in two pages.</a></div></div>
+  </div></div>
+
+  <section class="band"><div class="wrap">
+    <h2>Does this apply to you?</h2>
+    <p class="lede mt6">Answer these six questions. If you answer <em>no</em> to any of them, you have a gap that is now formally on record as your responsibility.</p>
+    <div class="steps mt8" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+      <div class="step"><p>Do you have a written mental health policy, reviewed within the last year, published on your website and notice boards?</p></div>
+      <div class="step"><p>If a student disclosed active suicidal thinking today, is there a written escalation pathway naming who decides what happens next?</p></div>
+      <div class="step"><p>Has every member of your teaching <strong>and</strong> non-teaching staff had training in identifying warning signs, delivered by a certified mental health professional, at least twice this year?</p></div>
+      <div class="step"><p>Is your counsellor supervised by a clinician more senior than they are?</p></div>
+      <div class="step"><p>Are your counselling records held in a way that would survive scrutiny under the Mental Healthcare Act 2017 and the DPDP Act 2023?</p></div>
+      <div class="step"><p><strong>If the worst happened, do you have a written plan for the first forty-eight hours?</strong> Who is contacted, in what order, what is said to staff and students, and who supports the staff afterwards.</p></div>
+    </div>
+    <p class="mt8">Most institutions we audit answer <em>yes</em> to one or two. That is not negligence. The requirements are new, specific, and arrived in three waves over eighteen months.</p>
+    <a class="textlink" href="#">Read what changed</a>
+  </div></section>
+
+  <section class="band cyan"><div class="wrap">
+    <h2>What changed</h2>
+    <div class="mt8">
+      <div class="dated"><div class="when">July 2025 — the Supreme Court made this a constitutional obligation</div>
+        <p>In <em>Sukdeb Saha v. State of Andhra Pradesh</em> (2025 INSC 893), the Court found a “legislative and regulatory vacuum” around student suicide prevention and issued fifteen binding guidelines that remain in force until Parliament legislates. They apply to <strong>all</strong> educational institutions across India: schools, colleges, universities, coaching centres, training institutes, residential academies and hostels, <em>irrespective of board or affiliation</em>.</p>
+        <p class="mt2">Among them: a published mental health policy drawing on UMMEED, MANODARPAN and the National Suicide Prevention Strategy, reviewed annually. A qualified counsellor, psychologist or social worker with demonstrable child and adolescent training for any institution with 100 or more students. For institutions below 100, <strong>formal referral linkages with external mental health professionals</strong>. Trained teaching and non-teaching staff. Documented referral pathways. Visible helplines. An annual anonymised compliance report.</p></div>
+
+      <div class="dated"><div class="when">January 2026 — CBSE turned it into an affiliation condition</div>
+        <p>By circular dated 19 January 2026, CBSE amended Clause 2.4.12 of its Affiliation Bye-Laws, 2018. Every affiliated secondary and senior secondary school must appoint a Counselling and Wellness Teacher at a ratio of 1:500 for Classes IX–XII, plus a separate Career Counsellor, with specified qualifications and a mandatory 50-hour CBSE capacity-building programme. This sits inside the affiliation bye-laws. It is a condition of affiliation, not an advisory.</p></div>
+
+      <div class="dated"><div class="when">February 2026 — CBSE specified what schools must actually do, and how often</div>
+        <p>A further circular requires all teaching, non-teaching and administrative staff to be trained <strong>at least twice a year</strong>, by certified mental health professionals, covering psychological first aid, identification of warning signs, response to self-harm, and referral mechanisms. Schools must run regular parent sensitisation programmes, maintain anonymised records, and file an annual report of wellness interventions, student referrals, training sessions and mental health activity.</p>
+        <p class="mt2">This is the circular most schools have not yet operationalised. It converts mental health from a hire into a recurring calendar and reporting obligation.</p></div>
+
+      <div class="dated"><div class="when">June 2026 onward — higher education is next, and the direction is already visible</div>
+        <p>The Supreme Court's National Task Force, chaired by Justice (Retd.) S. Ravindra Bhat, released its interim report on 8 June 2026 after surveying over 16 lakh respondents across 2,119 institutions. It found that student suicides are a structural and institutional failure, that no statutory framework exists to prevent them, and that existing provision is generic and reactive. Around 9% of surveyed students reported suicidal thoughts. The final report is due October 2026.</p>
+        <p class="mt2">The UGC's draft guidelines for higher education institutions, prepared following <em>Saha</em>, propose dedicated Mental Health and Wellbeing Centres and a counsellor-to-student ratio of <strong>1:100</strong> — five times tighter than the school requirement.</p></div>
+    </div>
+    <p class="mt8" style="font-size:20px"><strong>The direction is settled. What is still open is whether your institution builds a system or files a form.</strong></p>
+  </div></section>
+
+  <section class="band earth"><div class="wrap">
+    <h2>“We already have a counsellor”</h2>
+    <p class="lede mt6">Appointing a counsellor satisfies one line of a fifteen-point framework. Here is what we find when we audit institutions that consider the problem solved.</p>
+    <div class="mt8">
+      <div class="finding"><p><strong>The counsellor is unsupervised.</strong> A recent graduate is the only person responsible for a suicidal fifteen-year-old, a child disclosing abuse, and a parent who does not want to hear about either. No supervisor, no second opinion, no protocol.</p></div>
+      <div class="finding"><p><strong>There is no ceiling on the role.</strong> Active suicidality, eating disorders, psychosis, disclosed abuse. Without a defined escalation route and someone qualified to escalate <em>to</em>, the counsellor either carries what they should not, or freezes.</p></div>
+      <div class="finding"><p><strong>Teachers see it first and are told nothing.</strong> What to look for, what to say, what never to say, whom to inform when they see children going through psychological issues. CBSE now requires this twice a year, from a certified professional.</p></div>
+      <div class="finding"><p><strong>Parents find out the wrong way.</strong> Nobody has told parents what the counsellor does, when a child might be seen without a parent present, or what stays confidential. So the first they hear of it is from their own child, and the call to the principal starts from suspicion. A school with no prepared answer usually protects itself by quietly limiting what the counsellor is allowed to do.</p></div>
+      <div class="finding"><p><strong>Nothing is written down safely.</strong> Notes in shared drives and WhatsApp groups are now a named liability under the Mental Healthcare Act 2017 and the DPDP Act 2023.</p></div>
+    </div>
+    <p class="mt6" style="font-size:20px">None of this means your counsellor is doing a bad job. It means they were given a role without a system underneath it.</p>
+  </div></section>
+
+  <section class="band"><div class="wrap">
+    <h2>What you get</h2>
+    <p class="lede mt6">Six components. Take the whole system, or the parts you are missing. Each one produces a document or a record you can put in front of a regulator, a board, or a parent.</p>
+    <div class="grid3 mt8">
+      <div class="card"><h4>1. Baseline and compliance audit</h4><p class="mt6" style="font-size:16px;max-width:none">An anonymous wellbeing survey, staff interviews, and a review of your existing policy, records and referral practice, mapped against every requirement that now applies to you. <strong>You receive:</strong> a written gap report with a prioritised action list, and a compliance matrix showing your position against each of the fifteen <em>Saha</em> guidelines and each applicable CBSE or UGC clause. <em>Standalone engagement. Most partnerships start here.</em></p></div>
+      <div class="card"><h4>2. Policy and protocol</h4><p class="mt6" style="font-size:16px;max-width:none">Your mental health policy, drafted for publication as required. Plus the documents nobody writes until they are needed. <strong>You receive:</strong> the published policy; a risk identification protocol; an escalation and referral pathway naming who decides what at each threshold; a crisis response plan; a consent and confidentiality framework compliant with MHCA 2017 and DPDP 2023; and a postvention plan for the aftermath of a death.</p></div>
+      <div class="card"><h4>3. Clinical supervision</h4><p class="mt6" style="font-size:16px;max-width:none">Monthly structured supervision of your counsellor by a RCI-licensed clinical psychologist, case consultation on demand, and a named clinician reachable when something is unfolding. <strong>You receive:</strong> supervision records and a named accountable clinician. Your counsellor stops working alone. You stop carrying unsupervised clinical risk. The RCI-registered clinical psychologist has an entire team behind them. The Flow Clinic carries the responsibility.</p></div>
+      <div class="card"><h4>4. Staff capability</h4><p class="mt6" style="font-size:16px;max-width:none">Gatekeeper training for teaching and non-teaching staff, delivered in short modules inside your existing calendar. Separate sessions for leadership on institutional risk and decision-making. <strong>You receive:</strong> attendance records in your reporting format, module content, and trainer credentials.</p></div>
+      <div class="card"><h4>5. Parent and guardian programme</h4><p class="mt6" style="font-size:16px;max-width:none">Sessions on academic pressure and warning signs, plus a written explanation to parents of what you do, what you do not do, and how confidentiality works. <strong>You receive:</strong> the parent communication pack and sensitisation session records. Handled early, parents defend the programme. Handled late, they end it.</p></div>
+      <div class="card"><h4>6. Clinical access</h4><p class="mt6" style="font-size:16px;max-width:none">Where someone needs more than a counsellor can offer, they get it. Therapy with RCI-licensed clinicians, matched by fit rather than availability. <strong>You receive:</strong> clear escalation protocols when a student needs clinical care without an identification details.</p></div>
+    </div>
+    <p class="mt8"><strong>At year end:</strong> your anonymised annual report of interventions, referrals, training and activity, in the format your regulator expects. Assembled from records we have kept all year, not reconstructed in March.</p>
+  </div></section>
+
+  <section class="band cyan"><div class="wrap">
+    <h2>How we compare</h2>
+    <p class="lede mt6">You have four realistic options. Here is an honest account of them.</p>
+    <div style="overflow-x:auto">
+    <table>
+      <thead><tr><th></th><th>Hire a counsellor</th><th>EAP / corporate wellness vendor</th><th>App or teletherapy subscription</th><th>The Flow Clinic</th></tr></thead>
+      <tbody>
+        <tr><td><strong>What you are paying for</strong></td><td>A person</td><td>Access to a network</td><td>Access to an app</td><td>A system</td></tr>
+        <tr><td>Satisfies the CBSE 1:500 appointment clause</td><td>Yes</td><td>No</td><td>No</td><td>Yes, with the right hire</td></tr>
+        <tr><td>Supervision of that counsellor</td><td>No</td><td>No</td><td>No</td><td>Yes, RCI-licensed, monthly</td></tr>
+        <tr><td>Written policy, escalation and postvention</td><td>No</td><td>Rarely</td><td>No</td><td>Yes, all three</td></tr>
+        <tr><td>Twice-yearly certified staff training</td><td>No</td><td>Sometimes, generic</td><td>No</td><td>Yes, to CBSE spec</td></tr>
+        <tr><td>Named clinician accountable for risk decisions</td><td>No</td><td>No</td><td>No</td><td>Yes, named in your contract</td></tr>
+        <tr><td>Parent communication programme</td><td>No</td><td>Not applicable</td><td>No</td><td>Yes</td></tr>
+        <tr><td>Annual report in regulator format</td><td>No</td><td>Usage statistics only</td><td>Usage statistics only</td><td>Yes</td></tr>
+        <tr><td>Records held to MHCA + DPDP standard</td><td>Depends on you</td><td>Varies</td><td>Varies</td><td>Yes, by the treating clinician</td></tr>
+        <tr><td>Cost model</td><td>Fixed salary, year-round</td><td>Annual per-head licence</td><td>Annual per-head licence</td><td>Per component, per session used</td></tr>
+        <tr><td>You pay for capacity nobody uses</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="stack mt8" style="max-width:72ch">
+      <p><strong>A counsellor is the right choice</strong> if you have the volume to justify a full-time salary and you already have supervision, protocol and training in place. Most institutions have the first and none of the rest.</p>
+      <p><strong>An EAP or app subscription is the right choice</strong> if your only goal is to be able to say something is available. They are built for access, not for institutional risk. They will not write your policy, supervise your staff, sit with your leadership team after a death, or produce a report your regulator recognises.</p>
+      <p><strong>We are the right choice</strong> if the question you are actually being asked — by your board, your regulator, or your own conscience — is <em>what did we have in place</em>.</p>
+    </div>
+  </div></section>
+
+  <section class="band"><div class="wrap">
+    <h2>Does it work</h2>
+    <p class="lede mt6">We will tell you what the evidence supports and what it does not, because you will be pitched the opposite by others.</p>
+    <div class="grid2 mt8">
+      <div class="card"><h4>What the evidence supports</h4><p class="mt6" style="max-width:none;font-size:16px">Gatekeeper training reliably improves staff knowledge, confidence and referral behaviour — teachers who are trained notice more and act sooner. Clinical supervision improves practitioner decision-making and reduces burnout and dropout in early-career clinicians. Matching clients to therapists on their stated preferences reduces premature dropout, which is the single largest failure mode in therapy. Documented escalation pathways reduce the time between disclosure and appropriate care.</p></div>
+      <div class="card" style="background:var(--earth);border-color:#DDD2C4"><h4>What the evidence does not support</h4><p class="mt6" style="max-width:none;font-size:16px">No provider can demonstrate that their programme prevented a suicide at your institution. Suicide is statistically rare and multiply determined; the studies are not powered to show it and the honest literature says so. Anyone who tells you their programme prevents student suicides is selling you something they cannot deliver, and you should discount everything else they say.</p></div>
+    </div>
+    <h3 class="mt12">What we commit to measuring, and reporting to you</h3>
+    <ul class="dashes mt6">
+      <li>Baseline wellbeing survey at the start, repeated annually — you see movement, not assertion</li>
+      <li>Staff confidence and referral behaviour, before and after training</li>
+      <li>Referral volume, escalation volume, and time from identification to first clinical contact</li>
+      <li>Therapy utilisation, attendance and dropout rates</li>
+      <li>Training completion by staff category</li>
+    </ul>
+    <p class="mt6">If these numbers do not move, we will say so in the annual report and tell you what we think is wrong.</p>
+  </div></section>
+
+  <section class="band earth"><div class="wrap">
+    <h2>Who finds out</h2>
+    <div class="stack mt6" style="max-width:72ch">
+      <p><strong>Clinical records stay with the treating clinician</strong>, held to Mental Healthcare Act 2017 and DPDP Act 2023 standards. Your institution does not hold them and cannot request them. This protects you as much as the student — records you do not hold are records you cannot be compelled to produce or accused of misusing.</p>
+      <p><strong>You receive aggregated, anonymised data:</strong> how many people used the service, presenting categories, referral and escalation volume, training completion. Enough to report and to govern. Not enough to identify anyone.</p>
+      <p><strong>Disclosure of an individual happens only under defined risk conditions.</strong> Those conditions are agreed with you in writing before we begin, and explained to students, parents or employees at the start — rather than at the moment they matter.</p>
+      <p><strong>For workplaces, specifically:</strong> managers are not told who attended. There is no usage report by department, team or name, and we will not build one. If a vendor offers you that, understand what you are being offered.</p>
+    </div>
+  </div></section>
+
+  <section class="band"><div class="wrap">
+    <h2>The clinicians</h2>
+    <p class="lede mt6">Every clinician here is RCI-licensed, and we will show you the registration number of anyone assigned to your institution before they start. Supervision is provided only by clinicians with MPhil-level clinical training and supervisory experience — not by senior counsellors.</p>
+    <div class="card clin mt8">
+      <div class="avatar">VM</div>
+      <div style="flex:1;min-width:280px">
+        <h3>Vartika Modi</h3>
+        <p style="color:var(--g600);font-size:16px">MPhil Clinical Psychology, PGIMER and Dr. RML Hospital. RCI-registered.</p>
+        <p class="mt6" style="max-width:none">Over a decade of clinical practice across Acceptance and Commitment Therapy, Internal Family Systems, and trauma-informed care.</p>
+        <p class="mt6" style="max-width:none">Designed and supervised trauma-informed intervention for more than 10,000 children bereaved during COVID-19, with UNICEF and the Uttar Pradesh state government. Led the Khoya Paya psychological first aid initiative at the Maha Kumbh Mela in 2025, training and supervising 27 social workers across a crowd of that scale.</p>
+      </div>
+    </div>
+    <p class="mt6"><span class="tbc">Additional clinician profiles — at least one supervising clinician besides yourself, or this section undercuts the “small vetted panel” claim</span></p>
+  </div></section>
+
+  <section class="band cyan"><div class="wrap">
+    <h2>How a partnership works</h2>
+    <div class="steps mt12">
+      <div class="step"><h4>A discovery call</h4><p>Forty-five minutes, no cost, no deck. We map what you have, what applies to you, and where the risk actually sits. If you already have most of it, we will say so and tell you what is missing.</p></div>
+      <div class="step"><h4>A baseline audit</h4><p>Four to six weeks, priced separately. You get the written gap report whether or not you continue with us. Plenty of institutions stop here and implement it themselves. That is a legitimate outcome and we have designed the report to make it possible.</p></div>
+      <div class="step"><h4>A scoped proposal</h4><p>Costed by component, aligned to your academic or financial year. You choose what you take.</p></div>
+    </div>
+    <p class="mt8" style="font-size:19px">Most institutions are running within eight to ten weeks of the first call.</p>
+  </div></section>
+
+  <section class="band"><div class="wrap">
+    <h2>What it costs</h2>
+    <p class="mt6"><span class="tbc">Baseline audit pricing, both size bands — to be confirmed</span></p>
+    <div class="stack mt6" style="max-width:var(--read)">
+      <p>Everything after the audit is scoped, because a 300-student school and a 4,000-student university are not the same problem. What we can tell you now:</p>
+      <p><strong>Clinical supervision</strong> is billed monthly, per counsellor supervised. <strong>Training</strong> is billed per session delivered. <strong>Therapy access</strong> is billed per session used, not per head enrolled — you are not paying for capacity nobody touches.</p>
+      <p><strong>No annual platform fee. No per-student or per-employee licence. No minimum term.</strong></p>
+      <p>That last line is the real difference in cost model. Per-head licensing means you pay the same whether twelve people use the service or none. We would rather be paid for what we actually do.</p>
+      <p><strong>Below 500 students?</strong> Ask about the cluster model. A small group of schools in one catchment shares a counsellor, a supervisor and a crisis line, and the cost splits across the group. This is also how institutions under 100 students meet the <em>Saha</em> requirement for formal external referral linkages without funding a post they cannot afford.</p>
+      <p><span class="tbc">Cluster model size range and cost-split mechanics — to be confirmed</span></p>
+    </div>
+  </div></section>
+
+  <section class="band earth"><div class="wrap">
+    <h2>When we are not the right fit</h2>
+    <div class="stack mt6" style="max-width:72ch">
+      <p><strong>If someone is at immediate risk right now</strong>, that needs faster help than a procurement process. Tele-MANAS 14416, or emergency services. We are not a crisis helpline and we do not staff one.</p>
+      <p><strong>We will not certify provision we did not build or supervise.</strong> If you want a compliance sign-off on a system run by someone else, we cannot give you one.</p>
+      <p><strong>If you want the appearance of provision rather than provision</strong>, we are more expensive and more demanding than the alternatives, and you will find us frustrating. We would rather tell you now.</p>
+    </div>
+  </div></section>
+
+  <section class="band"><div class="wrap">
+    <h2>Which one are you</h2>
+    <div class="route mt6">
+      <a href="#" data-go="schools"><strong>Schools</strong><span>CBSE Clause 2.4.12 compliance, the February 2026 training and reporting requirements, counsellor supervision, whole-school systems, and the cluster model for smaller schools.</span></a>
+      <a href="#"><strong>Colleges and universities</strong><span>Student mental health provision built against the NTF interim findings and the UGC draft guidelines, ahead of the October 2026 final report.</span></a>
+      <a href="#"><strong>Workplaces</strong><span>Manager capability, confidential therapy access, and support through high-pressure cycles.</span></a>
+    </div>
+  </div></section>
+
+  <section class="band cyan"><div class="wrap">
+    <h2>FAQ</h2>
+    <div class="mt6">
+      <details open><summary>We already have a counsellor. What do we need you for?</summary><p>A counsellor satisfies one clause of a fifteen-point framework. Without supervision, a defined escalation ceiling, staff training and safe documentation, the counsellor is carrying risk they were never equipped to carry alone — and you are carrying it with them.</p></details>
+      <details><summary>Are we actually non-compliant right now?</summary><p>Most institutions we audit are, on at least several of the fifteen points. Not because of negligence, but because the requirements are new, specific, and arrived in three separate waves. The February 2026 CBSE circular in particular — twice-yearly certified staff training, anonymised records, annual reporting — is the one most schools have not yet acted on. The baseline audit tells you exactly where you stand.</p></details>
+      <details><summary>Will this frighten our parents?</summary><p>Handled early and explained plainly, parents defend the programme. We help you write that explanation before you need it, not after a concern comes in. CBSE now requires parent sensitisation anyway; it is better done as communication than as compliance.</p></details>
+      <details><summary>How much teaching or working time does it take?</summary><p>Training is delivered in short modules inside your existing calendar. Nothing is scheduled against board exams, admissions, or your busiest institutional periods.</p></details>
+      <details><summary>What if a student discloses something serious? Who decides what happens?</summary><p>A named, RCI-licensed clinician — not the counsellor alone. The escalation pathway and the person responsible for each decision is documented and agreed before we begin.</p></details>
+      <details><summary>What if something goes badly wrong and we are asked what we had in place?</summary><p>This is precisely what the policy, protocol and documentation work exists for: a written record of what was in place, agreed and dated in advance. It is the difference between an institution that had a system and an institution that had good intentions.</p></details>
+      <details><summary>Can you supervise the counsellor we already employ, without replacing them?</summary><p>Yes. This is the most common starting point. Your counsellor keeps their role; they stop working without a supervisor above them.</p></details>
+      <details><summary>We are not a CBSE school. Does any of this apply to us?</summary><p>Yes, on the constitutional side. The <em>Saha</em> guidelines apply to all educational institutions irrespective of board — CBSE, ICSE, IB and state boards alike. The 1:500 ratio and 50-hour training requirement in Clause 2.4.12 is a CBSE affiliation condition and applies directly only to CBSE-affiliated schools. The underlying legal obligation does not depend on your board.</p></details>
+      <details><summary>Do you work outside Kolkata?</summary><p><span class="tbc">Confirm before publishing — the doc carries a suggested answer but flags it as unconfirmed.</span></p></details>
+      <details><summary>Can we start with just the audit?</summary><p>Yes. The audit is a standalone engagement. You get the written gap report whether or not you continue afterward.</p></details>
+      <details><summary>How do we know you can deliver at our scale?</summary><p>Ask us on the call, and ask the same of every vendor you are speaking to. Our clinical lead has designed and supervised trauma-informed intervention for over 10,000 children and trained and supervised frontline workers at the Maha Kumbh. We will also tell you where we are small: <span class="tbc">state your current institutional client count honestly, or say what your capacity ceiling is this academic year</span>.</p></details>
+    </div>
+  </div></section>
+
+  <section class="band deep"><div class="wrap">
+    <h2>A counsellor is a hire. A mental health system is infrastructure.</h2>
+    <p class="lede mt6" style="color:#DCE5EF">One satisfies a clause. The other catches a child.</p>
+    <div class="mt8"><a class="btn btn-light" href="#">Book a discovery call</a>
+    <div><a class="textlink" href="#" style="color:var(--powder)">Or write to partner@theflowclinic.org</a></div></div>
+  </div></section>
+</div>
+
+<!-- ============== SCHOOLS ============== -->
+<div class="page" id="p-schools">
+  <div class="hero"><div class="wrap">
+    <div class="rule"></div>
+    <h1>CBSE now requires a counsellor, a ratio, specified qualifications, 50 hours of training — and staff training twice a year, every year.</h1>
+    <p class="lede mt6">Here is what the clauses say, and what schools are actually doing about them.</p>
+    <div class="mt8"><a class="btn" href="#">Book a discovery call</a>
+    <div><a class="textlink" href="#">Or read the compliance checklist</a></div></div>
+  </div></div>
+
+  <section class="band"><div class="wrap">
+    <h2>The clauses, in full</h2>
+    <div class="stack mt8" style="max-width:74ch">
+      <p><strong>Clause 2.4.12.1 — Counselling and Wellness Teacher.</strong> Every CBSE-affiliated secondary and senior secondary school must appoint one regular Counselling and Wellness Teacher (socio-emotional counsellor) for up to every 500 students enrolled in Classes IX–XII.</p>
+      <p><strong>Clause 2.4.12.2 — Career Counsellor.</strong> A separate, compulsory Career Counsellor appointment for Classes IX–XII, with its own qualification and ratio requirements.</p>
+      <p><strong>Qualifications (either role).</strong> A graduate or postgraduate degree in Psychology (clinical, counselling, applied or educational); <em>or</em> a postgraduate degree in Social Work with specialisation in mental health or counselling; <em>or</em> any UG/PG degree plus a diploma in school counselling or child guidance and counselling.</p>
+      <p><strong>Required competencies.</strong> SEL delivery, crisis intervention, identification of mental health concerns, parent and teacher sensitisation, and confidentiality.</p>
+      <p><strong>Training requirement.</strong> A mandatory 50-hour CBSE-recognised capacity-building programme (CBP3). Where a Career Counsellor is not immediately available, the circular permits nominating a trained teacher who must acquire the listed qualifications and competencies within two academic years.</p>
+      <p><strong>Hub-and-spoke provision for smaller schools.</strong> CBSE's counselling hub-and-spoke model may be adopted: larger, better-resourced hub schools support and share access with smaller nearby spoke schools.</p>
+      <p style="color:var(--g600);font-size:15px"><em>Source: CBSE Affiliation Bye-Laws, 2018, as amended by circular dated 19 January 2026.</em></p>
+    </div>
+  </div></section>
+
+  <section class="band earth"><div class="wrap">
+    <h2>And the clause everyone missed</h2>
+    <p class="lede mt6">A further CBSE circular in February 2026 requires:</p>
+    <ul class="dashes mt6">
+      <li><strong>Mandatory training for all teaching and non-teaching staff, at least twice a year</strong>, delivered by certified mental health professionals, covering psychological first aid, identification of warning signs, response to self-harm, and referral mechanisms</li>
+      <li><strong>Regular parent and guardian sensitisation</strong> on academic pressure and recognising distress</li>
+      <li><strong>Anonymised record-keeping</strong></li>
+      <li><strong>An annual report</strong> of wellness interventions, student referrals, training sessions and mental health activities</li>
+    </ul>
+    <p class="mt8" style="font-size:20px"><strong>Clause 2.4.12 is a hire. This is a calendar.</strong> It recurs every year, it requires an external certified professional, and it generates a document you will be asked for.</p>
+  </div></section>
+
+  <section class="band"><div class="wrap">
+    <h2>What we do that a hire does not</h2>
+    <p class="lede mt6">Supervision. Protocol. Escalation. Twice-yearly certified staff training. Parent communication. Anonymised records and the annual report.</p>
+    <a class="textlink" href="#" data-go="org">See <em>What you get</em> on the main page for the full breakdown</a>
+  </div></section>
+
+  <section class="band cyan"><div class="wrap">
+    <h2>The cluster model</h2>
+    <p class="lede mt6">Most schools in India are under 500 students and cannot fund a counsellor alone. We coordinate a small group of nearby schools to share a counsellor, a supervisor and a crisis line — so no single small school negotiates or pays alone.</p>
+    <p class="mt6">This also satisfies the <em>Saha</em> requirement that institutions with fewer than 100 students establish formal referral linkages with external mental health professionals.</p>
+    <p class="mt6"><span class="tbc">Minimum/maximum school count and cost-split mechanics — to be confirmed</span></p>
+  </div></section>
+
+  <section class="band"><div class="wrap">
+    <div class="grid2">
+      <div><h2>Calendar fit</h2>
+        <p class="mt6">Training happens in the pre-session window. Student-facing work happens inside term. Nothing is ever scheduled against board exams or admissions. We build the calendar around yours, not the other way round.</p></div>
+      <div><h2>What happens on the worst day</h2>
+        <p class="mt6">If a student dies by suicide, your postvention plan — who is contacted, in what order, what is said to the school and to other students, and who provides support to staff — is not something to write after it happens.</p>
+        <p class="mt6">We draft it, name the responsible clinician, and walk your leadership team through it before you ever need it. It takes one afternoon. It is the single most valuable thing on this page and the one most schools postpone.</p></div>
+    </div>
+  </div></section>
+
+  <section class="band earth"><div class="wrap">
+    <h2>FAQ</h2>
+    <div class="mt6">
+      <details open><summary>Do you cover primary and middle school, or only IX–XII?</summary><p>CBSE's ratio requirement is specific to Classes IX–XII. The <em>Saha</em> guidelines and the February 2026 training and reporting requirements are not grade-limited, so whole-school scope is both the safer reading and, in our view, the more useful one. We scope to what you want.</p></details>
+      <details><summary>We're not CBSE-affiliated (ICSE / IB / state board) — does this apply to us?</summary><p>Yes, constitutionally. See the main page FAQ. The CBSE ratio is a CBSE affiliation condition; the Supreme Court's guidelines are not board-specific.</p></details>
+      <details><summary>What gets told to parents, and when?</summary><p>Covered in the parent programme — see <em>What you get</em> on the main page.</p></details>
+      <details><summary>What happens to records if our counsellor resigns?</summary><p>Records remain with the treating clinician under MHCA 2017 and DPDP 2023. Continuity of supervision is not disrupted by staff turnover, which is one of the practical arguments for holding clinical records outside the school.</p></details>
+      <details><summary>Can you train and supervise the counsellor we already have, without replacing them?</summary><p>Yes. This is the most common starting point.</p></details>
+    </div>
+  </div></section>
+
+  <section class="band deep"><div class="wrap">
+    <h2>A counsellor is a hire. A mental health system is infrastructure.</h2>
+    <p class="lede mt6" style="color:#DCE5EF">One satisfies a clause. The other catches a child.</p>
+    <div class="mt8"><a class="btn btn-light" href="#">Book a discovery call</a></div>
+  </div></section>
+</div>
+
+<!-- ============== ABOUT US ============== -->
+<div class="page" id="p-about">
+  <div class="hero"><div class="wrap">
+    <div class="rule"></div>
+    <h1>About us</h1>
+    <p class="lede mt6">The Flow Clinic is a clinical psychology practice built around one question that most services skip: is this the right therapist for this person?</p>
+    <p class="mt6">We are RCI-registered clinical psychologists working with individuals, schools, universities and workplaces. We match before we book, we keep the panel small, and we tell you what the work will involve before you commit to it.</p>
+  </div></div>
+
+  <section class="band"><div class="wrap">
+    <div class="parallel">
+      <div class="panel">
+        <h3>Our vision</h3>
+        <div class="stack">
+          <p style="max-width:none">Finding the right therapist is of utmost importance. The working relationship between client and therapist influences the outcome of therapy massively. In short it determines whether the need for which therapy was sought was met with clear outcomes.</p>
+          <p style="max-width:none">Most people in India who try therapy do so once. If that one attempt lands badly, the conclusion drawn is usually that therapy does not work, rather than that the fit was wrong. We want the second conclusion to be the obvious one, and we want the fit to be gettable on the first try.</p>
+          <p style="max-width:none"><strong>Our vision is a country where finding the right therapist is a process, not luck.</strong></p>
+        </div>
+      </div>
+      <div class="panel alt">
+        <h3>Our mission</h3>
+        <div class="stack">
+          <p style="max-width:none">To match every client to a therapist on the things that actually shape the work: pace, structure, how much the therapist leads, how much the past comes into the room.</p>
+          <p style="max-width:none">We do this with a validated preference instrument rather than a form and a waiting list, and we hold the panel small enough that we can stand behind each match we make.</p>
+        </div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="band earth"><div class="wrap">
+    <p class="eyebrow">Our philosophy</p>
+    <h2>Good therapy isn't a volume business.</h2>
+    <div class="stack mt6" style="max-width:var(--read)">
+      <p>We could grow faster by signing every therapist who applies and letting them take unlimited clients. Most platforms do exactly that. We think it is why so many people try therapy once, get a poor fit, and never go back.</p>
+      <p>So we built the opposite. A small, vetted panel. Capped caseloads. A matching process that treats the first session as something to get right, not something to get through.</p>
+    </div>
+    <div class="grid2 mt12">
+      <div class="card"><h4>Fit before brand</h4><p class="mt6" style="max-width:none;font-size:16px">Decades of outcome research point the same way. The working relationship between client and therapist predicts whether therapy helps more reliably than the school of therapy does, and clients whose stated preferences are accommodated are measurably less likely to drop out. We built the service around that finding instead of around a method we happen to like.</p></div>
+      <div class="card"><h4>Say what therapy can and cannot do</h4><p class="mt6" style="max-width:none;font-size:16px">No promises of transformation. No thirty-day band-aid fixes. A clear account of the method, the likely course, and what progress will look like for you, said plainly enough that you can hold us to it.</p></div>
+      <div class="card"><h4>A therapist with room to think is a better therapist</h4><p class="mt6" style="max-width:none;font-size:16px">Caseload caps are not a marketing position. They are the condition under which careful formulation, supervision and actual preparation between sessions remain possible.</p></div>
+      <div class="card"><h4>Care is a family matter here</h4><p class="mt6" style="max-width:none;font-size:16px">We work in India, where the decision to seek help is usually a shared one. We build for the person who noticed as much as for the person who is struggling.</p></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ============== WHY US ============== -->
+<div class="page" id="p-why">
+  <div class="hero"><div class="wrap">
+    <div class="rule"></div>
+    <h1>Why us: for individual therapy</h1>
+    <p class="lede mt6">Clinical psychologist led, end to end. The Flow Clinic is run by clinicians, not by growth targets. Here is what that changes in practice.</p>
+  </div></div>
+
+  <section class="band"><div class="wrap">
+    <div class="stack" style="max-width:74ch">
+      <div class="finding"><h3>Every clinician is RCI-registered</h3><p class="mt6" style="max-width:none">Clinical psychology, not counselling-adjacent coaching. We publish each clinician's registration number and qualifications so you can check rather than trust.</p></div>
+      <div class="finding"><h3>We turn away most therapists who apply</h3><p class="mt6" style="max-width:none">We are not building the biggest panel. We are building one small enough that we can vouch for every name on it — every clinician here is someone we would send our own family to.</p></div>
+      <div class="finding"><h3>Caseloads are capped, on purpose</h3><p class="mt6" style="max-width:none">Most platforms reward therapists for taking as many clients as they can hold. We cap it. A clinician carrying twenty clients gives you a different quality of attention than one carrying fifty — more room to remember, to prepare, to actually think about your week between sessions. It means we sometimes run a short waitlist. It also means you are never a number.</p></div>
+      <div class="finding"><h3>Online, and not a lighter version of therapy</h3><p class="mt6" style="max-width:none">Online delivery still carries a reputation problem, so we will be direct: this is the same treatment, over video. Same assessment, same formulation, same session length, same clinical notes, same registered psychologist. What changes is the room, not the rigour.</p></div>
+      <div class="finding"><h3>Confidentiality you can actually read</h3><p class="mt6" style="max-width:none">Clear terms on what is confidential and what the limits are, written in plain language before you begin. Fees and cancellation terms stated up front, never discovered later.</p></div>
+    </div>
+  </div></section>
+
+  <section class="band cyan"><div class="wrap">
+    <h2>Why us: for institutions</h2>
+    <p class="mt6"><span class="tbc">This heading appears in the doc with no copy written under it.</span></p>
+  </div></section>
+
+  <section class="band"><div class="wrap">
+    <h2>Our therapists</h2>
+    <p class="mt6"><span class="tbc">Therapist catalogue here</span></p>
+  </div></section>
+</div>
+
+<!-- ============== FOR PARENT, PARTNER AND FRIEND ============== -->
+<div class="page" id="p-someone">
+  <div class="hero"><div class="wrap">
+    <div class="rule"></div>
+    <h1>Looking for help for someone you love?</h1>
+    <p class="lede mt6">In many Indian families the first step towards help is taken by someone else. A partner, a parent, a sibling, a friend who noticed something before the person themselves did. If you are here on someone else's behalf, you are in the right place.</p>
+  </div></div>
+
+  <section class="band"><div class="wrap">
+    <h2>What you can do from here</h2>
+    <div class="stack mt6" style="max-width:var(--read)">
+      <p>You can read through the site, look at how matching works, and understand what a first session actually involves, so that when you bring it up you are offering something concrete rather than a vague suggestion to “see someone.” People are far more likely to say yes to a specific, low-commitment first step than to the idea of therapy in general.</p>
+      <p>You can point them towards the free 15 minute discovery call. It costs nothing, it is audio only, and it commits them to nothing further. For someone who is hesitant, that is often an easier yes than a first session.</p>
+      <p>You can also book a session for yourself. Supporting someone who is struggling is genuinely hard, and it is common to reach a point where you do not know what to say, how much to push, or how to keep your own life steady while you worry about theirs. That is worth talking through with someone, on its own terms.</p>
+    </div>
+  </div></section>
+
+  <section class="band cyan"><div class="wrap">
+    <h2>A few things worth knowing</h2>
+    <div class="stack mt6" style="max-width:72ch">
+      <p><strong>They have to choose it.</strong> Therapy works when the person walks in wanting something from it. You can open the door. You cannot walk them through it, and pushing usually produces a few resentful sessions and then a refusal to try again.</p>
+      <p><strong>You cannot sit in on their sessions or ask us how they are doing.</strong> For adults, what happens in therapy stays between the client and their therapist. We will not confirm whether someone is a client, share what was discussed, or pass on messages. This is not us being difficult. It is the reason therapy works at all, and it would protect you in the same way if you were the one in the room.</p>
+      <p><strong>If it is your child under 18,</strong> the consent and confidentiality arrangement is different, and you will be involved in a defined way. We will explain exactly how before anything begins.</p>
+    </div>
+    <div class="boundary mt8">
+      <p><strong>If you are worried about immediate safety</strong> — if they have talked about ending their life, or you believe they are in danger right now — this is not the right route. Please contact a hospital emergency department, or call Tele-MANAS on 14416, which is free and available 24 hours in multiple Indian languages.</p>
+    </div>
+  </div></section>
+
+  <section class="band"><div class="wrap">
+    <h2>How to raise it with them</h2>
+    <p class="lede mt6">Lead with what you have actually seen rather than what you have concluded. “You have not been sleeping and you have stopped calling anyone back” is easier to hear than “I think you are depressed.” Offer the specific first step: a fifteen minute call, free, from their own phone. And leave room for no. The offer staying open matters more than them accepting it today.</p>
+    <div class="mt8">
+      <a class="btn" href="#">Explore how matching works</a>
+      <div><a class="textlink" href="#">Book a session for yourself</a></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ============== FAQ ============== -->
+<div class="page" id="p-faq">
+  <div class="hero"><div class="wrap">
+    <div class="rule"></div>
+    <h1>FAQ</h1>
+  </div></div>
+
+  <section class="band"><div class="wrap">
+    <div class="mt6">
+      <details open><summary>Is online therapy as effective as meeting a therapist in person?</summary><p>Yes. Online therapy is the same treatment, delivered over video, and the research consistently finds comparable outcomes for the presentations we most commonly treat. What changes is the room, not the rigour: the same registered clinical psychologists, the same assessment, the same treatment plan, the same fifty-minute session, the same clinical notes.</p><p>The one genuine difference is that online therapy asks slightly more of you in turning up and taking it seriously, because nothing about your surroundings marks it out as an appointment. We build that into how we set things up with you from the first session.</p></details>
+      <details><summary>How does the matching process work?</summary><p>Before your first session you complete a short preference profile — about ten minutes. It asks how you want therapy to work: how directive you want your therapist to be, how much you want to work with emotion, whether you want to focus on the past or on the present, and whether you want warm support or focused challenge.</p><p>We match you to clinicians whose way of working fits your answers. You choose from what we put forward. We do not hand you a directory and wish you luck.</p></details>
+      <details><summary>What if therapy didn't work for me before?</summary><p>That is often a fit problem rather than a you problem. The working relationship between client and therapist is one of the largest predictors of whether therapy helps — larger than the specific school of therapy. Most people are matched by whoever happened to be free that week. We match on your stated preferences from the start, so you are not starting over with the wrong person.</p></details>
+      <details><summary>What if my matched therapist is full?</summary><p>It happens, because caseloads are capped. You can join the waitlist for that clinician and we will tell you the moment a slot opens, or you can see your next-best matches — other clinicians your profile fits well who are available sooner. Either way you are not left without care.</p></details>
+      <details><summary>Is what I say confidential, and what happens to my data?</summary><p>Sessions are confidential, with the standard clinical and legal limits set out for you in writing before you begin. Your records are handled in line with the Digital Personal Data Protection Act, 2023 and the Mental Healthcare Act, 2017. We tell you what we collect, why we collect it, how long we keep it and how to have it deleted.</p></details>
+      <details><summary>Do I need a diagnosis to start therapy?</summary><p>No. You do not need a diagnosis, a referral or a crisis. Many people come because sleep, focus, irritability, a relationship or a decision is getting in the way, and they would rather deal with it now than after it gets worse.</p></details>
+      <details><summary>What does a session cost, and what is your cancellation policy?</summary><p>Fees are shown in full before you book — no packages you have to buy blind, no surprise charges. Sessions run fifty minutes. Our cancellation window and any applicable charge are stated in writing at the point of booking.</p></details>
+    </div>
+  </div></section>
+
+  <section class="band earth"><div class="wrap">
+    <h2>Listed in the doc, not yet written</h2>
+    <div class="mt6">
+      <details><summary>Do I have to talk about my childhood?</summary><p><span class="tbc">Not yet written</span></p></details>
+      <details><summary>What if I don't know what's wrong?</summary><p><span class="tbc">Not yet written</span></p></details>
+      <details><summary>What if I cry?</summary><p><span class="tbc">Not yet written</span></p></details>
+      <details><summary>Can I do this in Bengali or Hindi?</summary><p><span class="tbc">Not yet written</span></p></details>
+      <details><summary>What if I don't like my therapist?</summary><p><span class="tbc">Not yet written</span></p></details>
+      <details><summary>Will I have to take medication?</summary><p><span class="tbc">Not yet written</span></p></details>
+      <details><summary>Can I keep my camera off?</summary><p><span class="tbc">Not yet written</span></p></details>
+      <details><summary>How is this different from talking to a friend?</summary><p><span class="tbc">Not yet written</span></p></details>
+    </div>
+  </div></section>
+</div>
+
+</main>
+
+<div class="crisis"><div class="wrap">
+  <span><strong>In immediate distress?</strong> Tele-MANAS (India, 24/7): <strong>14416</strong>. If someone is in danger right now, call emergency services.</span>
+</div></div>
+
+<footer><div class="wrap">
+  <div class="brand" style="color:#fff">The Flow Clinic<em style="color:var(--powder)">Reclaim your mind</em></div>
+  <div class="foot-grid">
+    <div><a href="#">Home</a><a href="#">About us</a><a href="#">Why us</a><a href="#">Our therapists</a></div>
+    <div><a href="#">For organisations</a><a href="#">Schools</a><a href="#">Colleges and universities</a><a href="#">Workplaces</a></div>
+    <div><a href="#">For parent, partner and friend</a><a href="#">FAQ</a><a href="#">Contact</a></div>
+    <div><a href="#">partner@theflowclinic.org</a></div>
+  </div>
+</div></footer>
+
+</div>
 <script>
-(async function(){
-  try {
-    if (typeof DecompressionStream === 'undefined') throw new Error('This browser does not support gzip decompression.');
-    const urls=['site-data-0.txt','site-data-1.txt','site-data-2.txt','site-data-3.txt'];
-    const parts=await Promise.all(urls.map(async function(url){
-      const response=await fetch(url,{cache:'no-store'});
-      if(!response.ok) throw new Error('Could not load '+url);
-      return response.text();
-    }));
-    const base64=parts.join('');
-    const binary=atob(base64);
-    const bytes=new Uint8Array(binary.length);
-    for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
-    const decompressed=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
-    const html=await new Response(decompressed).text();
-    document.open();
-    document.write(html);
-    document.close();
-  } catch (error) {
-    console.error(error);
-    document.getElementById('loading').textContent='Unable to load this page in the current browser.';
+(function(){
+  var tabs=document.querySelectorAll('.tab');
+  function go(p){
+    tabs.forEach(function(x){x.setAttribute('aria-selected',x.dataset.p===p?'true':'false')});
+    document.querySelectorAll('.page').forEach(function(el){el.classList.remove('active')});
+    var t=document.getElementById('p-'+p); if(t)t.classList.add('active');
+    window.scrollTo(0,0);
   }
+  tabs.forEach(function(t){t.addEventListener('click',function(){go(t.dataset.p)})});
+  document.querySelectorAll('[data-go]').forEach(function(a){
+    a.addEventListener('click',function(e){e.preventDefault();go(a.dataset.go)});
+  });
 })();
 </script>
 </body>
